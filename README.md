@@ -27,9 +27,3 @@ Optional, default is <code>2012-06-15</code>:
 
     export ENSTRATUS_API_VERSION=2012-06-15
 
-## Run
-
-Listing available clouds is the only action in the example:
-
-    ./run.sh -a listclouds
-
