@@ -56,7 +56,6 @@ public class ListDatacenters extends AbstractAction implements Action {
         return "dataCenters";
     }
 
-    // for IDE quick-access/debug
     public static void main(String[] args) throws Exception {
         String regionId = "20827";
         EnstratusClient enstratusClient = new EnstratusHttpClient();
@@ -68,6 +67,5 @@ public class ListDatacenters extends AbstractAction implements Action {
             System.out.println(datacenter);            
         }
     }
-
 
 }
