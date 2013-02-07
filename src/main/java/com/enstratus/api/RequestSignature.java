@@ -15,10 +15,10 @@ import com.google.common.io.ByteProcessor;
 
 public class RequestSignature {
     
-    public static String sign(byte[] key, String toSign) throws Exception {
+    public static String sign(String key, String toSign) throws Exception {
         
         final Mac mac = Mac.getInstance("HmacSHA256");
-        mac.init(new SecretKeySpec(key, "HmacSHA256"));
+        mac.init(new SecretKeySpec(key.getBytes(), "HmacSHA256"));
         ByteProcessor<byte[]> processor = asByteProcessor(mac);
         InputStream input = new ByteArrayInputStream(toSign.getBytes(Charsets.UTF_8));;
         return base64().encode(readBytes(input , processor));

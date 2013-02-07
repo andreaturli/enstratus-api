@@ -1,5 +1,8 @@
 package com.enstratus.api;
 
+import static com.enstratus.api.utils.EnstratusConstants.DEFAULT_BASEURL;
+import static com.enstratus.api.utils.EnstratusConstants.DEFAULT_VERSION;
+import static com.enstratus.api.utils.EnstratusConstants.USER_AGENT;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
@@ -30,86 +33,71 @@ import org.apache.http.protocol.HttpContext;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Represents one request. Creates a new HttpClient for every call: this is
- * inefficient for large numbers of simultaneous calls.
+ * Represents one request to Enstratus API
  */
 public class ApiRequest {
 
-    private final String path;
+    private final HttpMethod method;
+    private final String apiCall;
     private final String accessKey;
     private final String secretKey;
+    private final String baseUrl;
+    private final String version;
     private final String userAgent;
     private final boolean json;
     private final Details details;
-    private final HttpMethod method;
-    private final HttpUriRequest request;
-    
-    /**
-     * @param method
-     *            GET, POST, PUT, DELETE, HEAD
-     * @param apiCall
-     *            call e.g. "geography/Cloud"
-     * @param version
-     *            version e.g. "2012-02-29"
-     * @param baseUrl
-     *            "https://api.enstratus.com"
-     * @param accessKey
-     *            access key
-     * @param secretKey
-     *            raw secret key
-     * @param userAgent
-     *            desired user agent, may be null for default
-     * @param json
-     *            true if json is desired, false for xml
-     * @param details
-     *            'none', 'basic', or 'extended'
-     * @param requestBody
-     *            POST or PUT may include request body, or null
-     * @throws MalformedURLException
-     * @throws URISyntaxException
-     */
-    public ApiRequest(HttpMethod method, String apiCall, String version, String baseUrl, String accessKey,
-            String secretKey, String userAgent, boolean json, Details details, String requestBody, List<NameValuePair> queryParams )
-            throws MalformedURLException, URISyntaxException {
-        this.path = "/api/enstratus/" + checkNotNull(version, "version") + '/' + checkNotNull(apiCall, "apiCall");
+
+    final DefaultHttpClient httpclient = new DefaultHttpClient();
+
+    public ApiRequest(HttpMethod method, String apiCall, String accessKey, String secretKey, String baseUrl,
+            String version, String userAgent, boolean json, Details details) throws MalformedURLException,
+            URISyntaxException {
+        this.method = checkNotNull(method, "HTTP method");
+        this.apiCall = checkNotNull(apiCall, "apiCall");
         this.accessKey = checkNotNull(accessKey, "accessKey");
         this.secretKey = checkNotNull(secretKey, "secretKey");
+        this.baseUrl = checkNotNull(baseUrl, "baseUrl");
+        this.version = checkNotNull(version, "version");
         this.userAgent = checkNotNull(userAgent, "userAgent");
         this.json = checkNotNull(json, "json");
         this.details = checkNotNull(details, "details");
-        this.method = methodCheck(method);
-        URL base = new URL(baseUrl);
-        URI uri = new URI(base.getProtocol(), base.getHost(), path, requestBody, null);
+    }
 
+    public ApiRequest(HttpMethod method, String apiCall, String accessKey, String secretKey)
+            throws MalformedURLException, URISyntaxException {
+        this(method, apiCall, accessKey, secretKey, DEFAULT_BASEURL, DEFAULT_VERSION, USER_AGENT, true, Details.BASIC);
+    }
+
+    public HttpResponse call(String requestBody, List<NameValuePair> queryParams) throws Exception {
+        String path = String.format("/api/enstratus/%s/%s", version, apiCall);
+        URL base = new URL(baseUrl);
+        URI uri = new URI(base.getProtocol(), base.getHost(), path, null);
+        HttpUriRequest request;
         try {
-            this.request = createRequest(method, uri, requestBody, queryParams);
+            request = createRequest(method, uri, requestBody, queryParams);
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
-    }
-
-    /**
-     * Returns call result (including error statuses) or throws an exception for
-     * serious issues
-     * 
-     * @return result
-     */
-    public HttpResponse call() throws Exception {
-        final DefaultHttpClient httpclient = new DefaultHttpClient();
-        final String timestamp = Long.toString(System.currentTimeMillis());
-        final String toSign = Joiner.on(":").join(
-                ImmutableList.of(accessKey, method.toString(), path, timestamp, userAgent));
-        final String signature = RequestSignature.sign(secretKey.getBytes(), toSign);
+        String timestamp = Long.toString(System.currentTimeMillis());
+        String toSign = Joiner.on(":").join(ImmutableList.of(accessKey, method.toString(), path, timestamp, userAgent));
+        String signature = RequestSignature.sign(secretKey, toSign);
         addHeaders(httpclient, signature, timestamp);
         return httpclient.execute(request);
     }
 
-    public String getUrl() {
-        return request.getURI().toASCIIString();
+    public HttpResponse call() throws Exception {
+        return call(null, null);
+    }
+
+    public HttpResponse call(List<NameValuePair> queryParams) throws Exception {
+        return call(null, queryParams);
+    }
+
+    public HttpResponse call(String requestBody) throws Exception {
+        return call(requestBody, null);
     }
 
     // -----------------------------------------------------------------------------------------
@@ -140,42 +128,33 @@ public class ApiRequest {
         });
     }
 
-    private static HttpUriRequest createRequest(HttpMethod httpMethod, URI uri, String body, List<NameValuePair> queryParameters) throws UnsupportedEncodingException, URISyntaxException {
+    private static HttpUriRequest createRequest(HttpMethod httpMethod, URI uri, String body,
+            List<NameValuePair> queryParameters) throws UnsupportedEncodingException, URISyntaxException {
         switch (httpMethod) {
-            case GET:
-                if(queryParameters != null && !queryParameters.isEmpty()) {
-                    uri = new URIBuilder(uri).setQuery(URLEncodedUtils.format(queryParameters, "UTF-8")).build();
-                }
-                return new HttpGet(uri);
-            case POST:
-                final HttpPost post = new HttpPost(uri);
-                if (body != null) {
-                    post.setEntity(new StringEntity(body));
-                }
-            /*
-             * StringRequestEntity requestEntity = new StringRequestEntity(JSON_STRING, "application/json", "UTF-8");
-             */
-                return post;
-            case PUT:
-                final HttpPut put = new HttpPut(uri);
-                if (body != null) {
-                    put.setEntity(new StringEntity(body));
-                }
-                return put;
-            case DELETE:
-                return new HttpDelete(uri);
-            case HEAD:
-                return new HttpHead(uri);
-            default:
-                throw new IllegalStateException("Unknown HTTP method: " + httpMethod);
+        case GET:
+            if (queryParameters != null && !queryParameters.isEmpty()) {
+                uri = new URIBuilder(uri).setQuery(URLEncodedUtils.format(queryParameters, "UTF-8")).build();
+            }
+            return new HttpGet(uri);
+        case POST:
+            final HttpPost post = new HttpPost(uri);
+            if (body != null) {
+                post.setEntity(new StringEntity(body));
+            }
+            return post;
+        case PUT:
+            final HttpPut put = new HttpPut(uri);
+            if (body != null) {
+                put.setEntity(new StringEntity(body));
+            }
+            return put;
+        case DELETE:
+            return new HttpDelete(uri);
+        case HEAD:
+            return new HttpHead(uri);
+        default:
+            throw new IllegalStateException("Unknown HTTP method: " + httpMethod);
         }
-    }
-
-    private static HttpMethod methodCheck(HttpMethod val) {
-        if (val == null) {
-            throw new IllegalArgumentException("no http method");
-        }
-        return val;
     }
 
     private static String detailsCheck(Details details) {
@@ -194,10 +173,8 @@ public class ApiRequest {
 
     @Override
     public String toString() {
-        ToStringHelper toStringHelper = Objects.toStringHelper(this).addValue(this.request.getMethod())
-                .addValue(this.request.getURI().toASCIIString());
-        toStringHelper.addValue(this.request.getProtocolVersion());
-        return toStringHelper.toString();
+        return Objects.toStringHelper(this).addValue(this.method).addValue(this.baseUrl).addValue(this.apiCall)
+                .toString();
     }
 
 }
