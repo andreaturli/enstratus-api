@@ -14,4 +14,8 @@ public class EnstratusAPI {
     public static InfrastructureApi getInfrastructureApi() {
         return new InfrastructureApi(enstratusClient);
     }
+
+    public static NetworkApi getNetworkApi() {
+        return new NetworkApi(enstratusClient);
+    }
 }
