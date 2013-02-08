@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.http.HttpResponse;
@@ -69,7 +70,7 @@ public class EnstratusHttpClient extends AbstractEnstratusClient implements Enst
     }
 
     protected HttpUriRequest constructHttpMethod(HttpMethod httpMethod, URI uri,
-            List<NameValuePair> queryParameters, String body) throws Exception {
+            List<NameValuePair> queryParameters, Map<String, Object> body) throws Exception {
         switch (httpMethod) {
             case GET:
                 log.debug("GET method created based on client request");
@@ -99,7 +100,7 @@ public class EnstratusHttpClient extends AbstractEnstratusClient implements Enst
     }
 
     
-    private String createJsonStringEntity(Object data) throws JsonGenerationException, JsonMappingException, IOException {
+    private String createJsonStringEntity(Map<String, Object> data) throws JsonGenerationException, JsonMappingException, IOException {
       return new ObjectMapper().writeValueAsString(data);
     }
 

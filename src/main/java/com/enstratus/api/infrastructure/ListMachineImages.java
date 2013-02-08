@@ -14,15 +14,14 @@ import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
 import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.model.Server;
-import com.enstratus.api.model.ServerProduct;
+import com.enstratus.api.model.MachineImage;
 
-public class ListServers extends AbstractAction implements Action {
+public class ListMachineImages extends AbstractAction implements Action {
 
-    private final String API_CALL = "infrastructure/Server";
+    private final String API_CALL = "infrastructure/MachineImage";
     private final String regionId;
     
-    public ListServers(String regionId) throws MalformedURLException, URISyntaxException {
+    public ListMachineImages(String regionId) throws MalformedURLException, URISyntaxException {
         this.regionId = checkNotNull(regionId, "regionId");
     }
     
@@ -45,14 +44,14 @@ public class ListServers extends AbstractAction implements Action {
     
     @Override
     public String getPathToResult() {
-        return "servers";
+        return "images";
     }
 
     public static void main(String[] args) throws Exception {
         String regionId = "20827";
-        List<Server> servers = EnstratusAPI.getInfrastructureApi().listServers(regionId);
-        for (Server server : servers) {
-            System.out.println(server);
+        List<MachineImage> machineImages = EnstratusAPI.getInfrastructureApi().listMachineImages(regionId);
+        for (MachineImage machineImage : machineImages) {
+            System.out.println(machineImage);
         }
     }
 }

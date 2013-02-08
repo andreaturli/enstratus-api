@@ -11,7 +11,7 @@ public interface Action {
 
     HttpMethod getRestMethodName();
 
-    String getBody();
+    Map<String, Object> getBody();
 
     String getPathToResult();
     

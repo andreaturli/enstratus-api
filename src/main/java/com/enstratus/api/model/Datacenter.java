@@ -3,11 +3,6 @@ package com.enstratus.api.model;
 import com.google.common.base.Objects;
 
 public class Datacenter {
-    
-    /*
-    * {region":{"regionId":20827},"status":"ACTIVE","description":"eu-west-1a","name":"eu-west-1a","dataCenterId":66634,"providerId":"eu-west-1a"},
-    */
-    public enum Status { ACTIVE };
 
     private Status status;
     private String description;

@@ -1,6 +1,5 @@
 package com.enstratus.api.geography;
 
-import static com.enstratus.api.utils.EnstratusConstants.DEFAULT_VERSION;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.MalformedURLException;
@@ -13,10 +12,8 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
+import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.client.EnstratusClient;
-import com.enstratus.api.client.EnstratusHttpClient;
-import com.enstratus.api.client.EnstratusResult;
 import com.enstratus.api.model.Datacenter;
 
 /**
@@ -36,7 +33,7 @@ public class ListDatacenters extends AbstractAction implements Action {
     
     @Override
     public String getURI() {
-        return String.format("/api/enstratus/%s/%s", DEFAULT_VERSION, API_CALL);
+        return resolveUri(API_CALL);
     }
 
     @Override
@@ -58,13 +55,9 @@ public class ListDatacenters extends AbstractAction implements Action {
 
     public static void main(String[] args) throws Exception {
         String regionId = "20827";
-        EnstratusClient enstratusClient = new EnstratusHttpClient();
-        EnstratusResult enstratusResult = enstratusClient.execute(new ListDatacenters(regionId));
-        System.out.println(enstratusResult.getJsonString());
-        
-        List<Datacenter> datacenters = enstratusResult.getSourceAsObjectList(Datacenter.class);
+        List<Datacenter> datacenters = EnstratusAPI.getGeographyApi().listDatacenters(regionId);
         for (Datacenter datacenter : datacenters) {
-            System.out.println(datacenter);            
+            System.out.println(datacenter);
         }
     }
 

@@ -7,14 +7,14 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
-import com.enstratus.api.ApiRequest;
+import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.utils.Printer;
+import com.enstratus.api.model.ServerProduct;
 
 /**
  * Server products represent the available options and pricing for launching a virtual machine.
@@ -22,26 +22,42 @@ import com.enstratus.api.utils.Printer;
  * @author andrea
  *
  */
-public class ListServerProducts extends Action {
+public class ListServerProducts extends AbstractAction implements Action {
 
-    private final String apiCall = "infrastructure/ServerProduct";
+    private final String API_CALL = "infrastructure/ServerProduct";
     private final String regionId;
     
     public ListServerProducts(String regionId) throws MalformedURLException, URISyntaxException {
         this.regionId = checkNotNull(regionId, "regionId");
     }
-
+    
     @Override
-    public HttpResponse execute() throws Exception {
-        List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
-        queryParams.add(new BasicNameValuePair("regionId", regionId));
-        return new ApiRequest(HttpMethod.GET, apiCall, accessKey, secretKey).call(queryParams);
+    public String getURI() {
+        return resolveUri(API_CALL);
     }
 
-    // for IDE quick-access/debug
+    @Override
+    public HttpMethod getRestMethodName() {
+        return HttpMethod.GET;
+    }
+
+    @Override
+    public List<NameValuePair> getQueryParameters() {
+        List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
+        queryParams.add(new BasicNameValuePair("regionId", regionId));
+        return queryParams;
+    }
+    
+    @Override
+    public String getPathToResult() {
+        return "serverProducts";
+    }
+
     public static void main(String[] args) throws Exception {
         String regionId = "20827";
-        final HttpResponse response = new ListServerProducts(regionId).execute();
-        Printer.print(response, "serverProducts");
+        List<ServerProduct> serverProducts = EnstratusAPI.getInfrastructureApi().listServerProducts(regionId);
+        for (ServerProduct serverProduct : serverProducts) {
+            System.out.println(serverProduct);
+        }
     }
 }

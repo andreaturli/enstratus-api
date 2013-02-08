@@ -46,9 +46,13 @@ public abstract class AbstractAction implements Action {
         this.accessKey = checkNotNull(accessKey, ENSTRATUS_API_ACCESS_KEY);
         this.secretKey = checkNotNull(secretKey, ENSTRATUS_API_SECRET_KEY);
     }
+    
+    protected String resolveUri(String apiCall) {
+        return String.format("/api/enstratus/%s/%s", DEFAULT_VERSION, apiCall);
+    }
 
     @Override
-    public String getBody() {
+    public Map<String, Object> getBody() {
         return null;
     }    
     

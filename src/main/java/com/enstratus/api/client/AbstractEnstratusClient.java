@@ -20,12 +20,10 @@ public abstract class AbstractEnstratusClient implements EnstratusClient {
         result.setJsonString(json);
         result.setJsonMap(jsonMap);
         result.setPathToResult(pathToResult);
+        result.setSucceeded(false);
 
-        if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
-            result.setSucceeded(false);
-            log.debug("Response is failed");
-        } else {
-            log.debug("Response is OK");
+        if (statusLine.getStatusCode() == HttpStatus.SC_OK || 
+            statusLine.getStatusCode() == HttpStatus.SC_ACCEPTED) {
             result.setSucceeded(true);
         }
         return result;

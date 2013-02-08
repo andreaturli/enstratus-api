@@ -7,10 +7,7 @@ Build the self-contained "fat" jar:
 
     mvn package
 
-This creates <code>enstratus-java-api-utils-X.Y.Z.jar</code>.
-
-That jar file and environment variables are all you need. The <code>run.sh</code> script is
-provided for convenience.
+This creates <code>enstratus-api-X.Y.Z.jar</code>.
 
 ## Setup
 

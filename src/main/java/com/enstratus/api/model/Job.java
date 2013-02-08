@@ -3,9 +3,7 @@ package com.enstratus.api.model;
 import com.google.common.base.Objects;
 
 public class Job {
-    //"startDate":"2013-02-07T16:28:44.773+0000","jobId":78931,"status":"RUNNING","description":"Launch Server test"
-    public enum Status { RUNNING, COMPLETED, ERROR };
-    
+
     private String startDate;
     private String endDate;
     private String jobId;

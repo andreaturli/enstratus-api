@@ -4,10 +4,6 @@ import com.google.common.base.Objects;
 
 public class Cloud {
 
-    public enum Status {
-        ACTIVE, INACTIVE
-    };
-
     private String cloudId;
     private Status status;
     private String computeX509KeyLabel;

@@ -1,16 +1,11 @@
 package com.enstratus.api.geography;
 
-import static com.enstratus.api.utils.EnstratusConstants.DEFAULT_VERSION;
-
 import java.util.List;
 
 import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
+import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.client.EnstratusClient;
-import com.enstratus.api.client.EnstratusHttpClient;
-import com.enstratus.api.client.EnstratusResult;
-import com.enstratus.api.model.Cloud;
 import com.enstratus.api.model.Region;
 
 public class ListRegions extends AbstractAction implements Action {
@@ -19,7 +14,7 @@ public class ListRegions extends AbstractAction implements Action {
 
     @Override
     public String getURI() {
-        return String.format("/api/enstratus/%s/%s", DEFAULT_VERSION, API_CALL);
+        return resolveUri(API_CALL);
     }
 
     @Override
@@ -32,13 +27,8 @@ public class ListRegions extends AbstractAction implements Action {
         return "regions";
     }
 
-    // for IDE quick-access/debug
     public static void main(String[] args) throws Exception {
-        EnstratusClient enstratusClient = new EnstratusHttpClient();
-        EnstratusResult enstratusResult = enstratusClient.execute(new ListRegions());
-        System.out.println(enstratusResult.getJsonString());
-
-        List<Region> regions = enstratusResult.getSourceAsObjectList(Region.class);
+        List<Region> regions = EnstratusAPI.getGeographyApi().listRegions();
         for (Region region : regions) {
             System.out.println(region);
         }
