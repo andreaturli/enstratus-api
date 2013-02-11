@@ -1,6 +1,4 @@
-package com.enstratus.api.admin;
-
-import static com.enstratus.api.utils.EnstratusConstants.DEFAULT_VERSION;
+package com.enstratus.api.actions.admin;
 
 import java.util.List;
 
@@ -18,7 +16,7 @@ public class ListJobs extends AbstractAction implements Action {
 
     @Override
     public String getURI() {
-        return String.format("/api/enstratus/%s/%s", DEFAULT_VERSION, API_CALL);
+        return resolveUri(API_CALL);
     }
 
     @Override

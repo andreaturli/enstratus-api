@@ -1,4 +1,4 @@
-package com.enstratus.api.infrastructure;
+package com.enstratus.api.actions.infrastructure;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,22 +12,14 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
-import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.model.ServerProduct;
 
-/**
- * Server products represent the available options and pricing for launching a virtual machine.
- * 
- * @author andrea
- *
- */
-public class ListServerProducts extends AbstractAction implements Action {
+public class ListServers extends AbstractAction implements Action {
 
-    private final String API_CALL = "infrastructure/ServerProduct";
+    private final String API_CALL = "infrastructure/Server";
     private final String regionId;
     
-    public ListServerProducts(String regionId) throws MalformedURLException, URISyntaxException {
+    public ListServers(String regionId) throws MalformedURLException, URISyntaxException {
         this.regionId = checkNotNull(regionId, "regionId");
     }
     
@@ -50,14 +42,7 @@ public class ListServerProducts extends AbstractAction implements Action {
     
     @Override
     public String getPathToResult() {
-        return "serverProducts";
+        return "servers";
     }
 
-    public static void main(String[] args) throws Exception {
-        String regionId = "20827";
-        List<ServerProduct> serverProducts = EnstratusAPI.getInfrastructureApi().listServerProducts(regionId);
-        for (ServerProduct serverProduct : serverProducts) {
-            System.out.println(serverProduct);
-        }
-    }
 }

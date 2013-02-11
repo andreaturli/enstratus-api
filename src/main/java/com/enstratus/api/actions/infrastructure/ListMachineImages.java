@@ -1,10 +1,9 @@
-package com.enstratus.api.geography;
+package com.enstratus.api.actions.infrastructure;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -14,20 +13,15 @@ import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
 import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.model.Datacenter;
+import com.enstratus.api.model.MachineImage;
+import com.google.common.collect.Lists;
 
-/**
- * A datacenter is a zone on aws terminology
- * 
- * @author andrea
- *
- */
-public class ListDatacenters extends AbstractAction implements Action {
+public class ListMachineImages extends AbstractAction implements Action {
 
-    private final static String API_CALL = "geography/DataCenter";
+    private final String API_CALL = "infrastructure/MachineImage";
     private final String regionId;
     
-    public ListDatacenters(String regionId) throws MalformedURLException, URISyntaxException {
+    public ListMachineImages(String regionId) throws MalformedURLException, URISyntaxException {
         this.regionId = checkNotNull(regionId, "regionId");
     }
     
@@ -40,25 +34,24 @@ public class ListDatacenters extends AbstractAction implements Action {
     public HttpMethod getRestMethodName() {
         return HttpMethod.GET;
     }
-    
+
     @Override
     public List<NameValuePair> getQueryParameters() {
-        List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
+        List<NameValuePair> queryParams = Lists.newArrayList();
         queryParams.add(new BasicNameValuePair("regionId", regionId));
         return queryParams;
     }
-
+    
     @Override
     public String getPathToResult() {
-        return "dataCenters";
+        return "images";
     }
 
     public static void main(String[] args) throws Exception {
         String regionId = "20827";
-        List<Datacenter> datacenters = EnstratusAPI.getGeographyApi().listDatacenters(regionId);
-        for (Datacenter datacenter : datacenters) {
-            System.out.println(datacenter);
+        List<MachineImage> machineImages = EnstratusAPI.getInfrastructureApi().listMachineImages(regionId);
+        for (MachineImage machineImage : machineImages) {
+            System.out.println(machineImage);
         }
     }
-
 }

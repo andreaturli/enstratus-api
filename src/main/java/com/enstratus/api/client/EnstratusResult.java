@@ -1,24 +1,22 @@
 package com.enstratus.api.client;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.collections.Lists;
 
-import com.enstratus.api.model.Datacenter;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Iterables;
 
 public class EnstratusResult {
 
     private static final Logger log = LoggerFactory.getLogger(EnstratusResult.class);
 
-    private Map jsonMap;
+    private Map<String, Object> jsonMap;
     private String jsonString;
     private String pathToResult;
     private boolean isSucceeded;
@@ -55,18 +53,24 @@ public class EnstratusResult {
         return (String) jsonMap.get("error");
     }
 
-    public Map getJsonMap() {
+    public Map<String, Object> getJsonMap() {
         return jsonMap;
     }
 
-    public void setJsonMap(Map jsonMap) {
+    public void setJsonMap(Map<String, Object> jsonMap) {
         this.jsonMap = jsonMap;
     }
 
-    public <T> T getSourceAsObjectList(Class<?> type) throws JsonParseException, JsonMappingException, IOException {
-        List<Object> objectList = new ArrayList<Object>();
+    @SuppressWarnings("unchecked")
+    public <T> T getSourceAsObject(Class<?> type) throws IOException {
+        return (T) Iterables.getOnlyElement((List<T>) getSourceAsObjectList(type));
+    } 
+    
+    @SuppressWarnings("unchecked")
+    public <T> T getSourceAsObjectList(Class<?> type) throws IOException {
+        List<Object> objectList = Lists.newArrayList();
         if (!isSucceeded) return (T) objectList;
-        List<Object> sourceList = (List<Object>) extractSource();
+        List<Object> sourceList = extractSource();
         for (Object source : sourceList) {
             Object obj = createSourceObject(source, type);
             if (obj != null) objectList.add(obj);
@@ -74,6 +78,7 @@ public class EnstratusResult {
         return (T) objectList;
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T createSourceObject(Object source, Class<?> type) {
         Object obj = null;
         try {
@@ -91,8 +96,8 @@ public class EnstratusResult {
         return (T) obj;
     }
 
-
-    protected List<Object> extractSource() throws JsonParseException, JsonMappingException, IOException {
+    @SuppressWarnings("unchecked")
+    protected List<Object> extractSource() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         final Map<String,Object> mapResponse = mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
         if (!isSucceeded) {

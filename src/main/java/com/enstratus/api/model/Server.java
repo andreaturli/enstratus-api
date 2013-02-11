@@ -19,6 +19,9 @@ public class Server {
     private Cloud cloud;
     private String providerProductId;
     private String agentVersion;
+    public String[] privateIpAddresses;
+    private String publicIpAddress;
+    private User owningUser;
 
     public String getServerId() {
         return serverId;
@@ -146,8 +149,32 @@ public class Server {
 
     public void setAgentVersion(String agentVersion) {
         this.agentVersion = agentVersion;
+    } 
+    
+    public String[] getPrivateIpAddresses() {
+        return privateIpAddresses;
     }
     
+    public void setPrivateIpAddresses(String[] privateIpAddresses) {
+        this.privateIpAddresses = privateIpAddresses;
+    }
+    
+    public String getPublicIpAddress() {
+        return publicIpAddress;
+    }
+
+    public void setPublicIpAddress(String publicIpAddress) {
+        this.publicIpAddress = publicIpAddress;
+    }
+
+    public User getOwningUser() {
+        return owningUser;
+    }
+
+    public void setOwningUser(User owningUser) {
+        this.owningUser = owningUser;
+    }
+
     @Override
     public String toString() {
         return Objects.toStringHelper(this)

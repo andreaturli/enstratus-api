@@ -10,13 +10,12 @@ public interface Action {
     String getURI();
 
     HttpMethod getRestMethodName();
-
-    Map<String, Object> getBody();
-
+    
     String getPathToResult();
     
     Map<String, String> getHeaders() throws Exception;
 
     List<NameValuePair> getQueryParameters();
-
+    
+    Map<String, Object> getBody();
 }

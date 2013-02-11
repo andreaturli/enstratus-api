@@ -1,10 +1,10 @@
-package com.enstratus.api;
+package com.enstratus.api.features;
 
 import java.util.List;
 
+import com.enstratus.api.actions.network.ListFirewalls;
 import com.enstratus.api.client.EnstratusClient;
 import com.enstratus.api.model.Firewall;
-import com.enstratus.api.network.ListFirewalls;
 
 public class NetworkApi {
 

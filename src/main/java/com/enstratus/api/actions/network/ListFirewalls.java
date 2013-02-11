@@ -1,4 +1,4 @@
-package com.enstratus.api.geography;
+package com.enstratus.api.actions.network;
 
 import java.util.List;
 
@@ -6,11 +6,11 @@ import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
 import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.model.Region;
+import com.enstratus.api.model.Firewall;
 
-public class ListRegions extends AbstractAction implements Action {
+public class ListFirewalls extends AbstractAction implements Action {
 
-    String API_CALL = "geography/Region";
+    protected final static String API_CALL = "network/Firewall";
 
     @Override
     public String getURI() {
@@ -24,14 +24,13 @@ public class ListRegions extends AbstractAction implements Action {
 
     @Override
     public String getPathToResult() {
-        return "regions";
+        return "firewalls";
     }
 
     public static void main(String[] args) throws Exception {
-        List<Region> regions = EnstratusAPI.getGeographyApi().listRegions();
-        for (Region region : regions) {
-            System.out.println(region);
+        List<Firewall> firewalls = EnstratusAPI.getNetworkApi().listFirewalls();
+        for (Firewall firewall : firewalls) {
+            System.out.println(firewall);
         }
     }
-
 }

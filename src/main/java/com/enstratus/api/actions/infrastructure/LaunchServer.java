@@ -1,4 +1,4 @@
-package com.enstratus.api.infrastructure;
+package com.enstratus.api.actions.infrastructure;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -10,9 +10,6 @@ import com.enstratus.api.Action;
 import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
 import com.enstratus.api.model.Job;
-import com.enstratus.api.model.MachineImage;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -20,15 +17,15 @@ public class LaunchServer extends AbstractAction implements Action {
 
     private final String API_CALL = "infrastructure/Server";
     private final String name;
-    private final String budget;
+    private final String budgetId;
     private final String description;
     private final String machineImageId;
     private final String dataCenterId;
 
-    public LaunchServer(String name, String budget, String description, String machineImageId, String dataCenterId) {
+    public LaunchServer(String name, String description, String budgetId, String machineImageId, String dataCenterId) {
         this.name = checkNotNull(name, "name");
-        this.budget = checkNotNull(budget, "budget");
         this.description = checkNotNull(description, "description");
+        this.budgetId = checkNotNull(budgetId, "budgetId");
         this.machineImageId = checkNotNull(machineImageId, "machineImageId");
         this.dataCenterId = checkNotNull(dataCenterId, "dataCenterId");
     }
@@ -74,7 +71,7 @@ public class LaunchServer extends AbstractAction implements Action {
         
         Map<String, Object> launchMap = Maps.newLinkedHashMap();
         launchMap.put("name", name);
-        launchMap.put("budget", budget);
+        launchMap.put("budget", budgetId);
         launchMap.put("description", description);
         launchMap.put("machineImage", machineImageDetails);
         launchMap.put("dataCenter", datacenterDetails);
@@ -88,12 +85,12 @@ public class LaunchServer extends AbstractAction implements Action {
 
     public static void main(String[] args) throws Exception {
         String name = "andrea-enstratus-test";
-        String budget = "10725";
         String description = "andrea enstratus test";
+        String budgetId = "10725";
         String machineImageId = "296131";
         String dataCenterId = "20827";
         List<Job> jobs = EnstratusAPI.getInfrastructureApi()
-                                     .launchServer(name, budget, description, machineImageId, dataCenterId);
+                                     .launchServer(name, description, budgetId, machineImageId, dataCenterId);
         for (Job job : jobs) {
             System.out.println(job);
         }

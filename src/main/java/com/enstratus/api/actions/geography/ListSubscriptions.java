@@ -1,4 +1,4 @@
-package com.enstratus.api.geography;
+package com.enstratus.api.actions.geography;
 
 import java.util.List;
 

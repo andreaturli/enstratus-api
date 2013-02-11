@@ -1,4 +1,4 @@
-package com.enstratus.api.infrastructure;
+package com.enstratus.api.actions.infrastructure;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,23 +12,22 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
-import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.model.Server;
-import com.enstratus.api.model.ServerProduct;
 
-public class ListServers extends AbstractAction implements Action {
+public class GetServer extends AbstractAction implements Action {
 
-    private final String API_CALL = "infrastructure/Server";
+    private final String API_CALL = "infrastructure/Server/%s";
+    private final String serverId;
     private final String regionId;
     
-    public ListServers(String regionId) throws MalformedURLException, URISyntaxException {
+    public GetServer(String serverId, String regionId) throws MalformedURLException, URISyntaxException {
+        this.serverId = checkNotNull(serverId, "serverId");
         this.regionId = checkNotNull(regionId, "regionId");
     }
     
     @Override
     public String getURI() {
-        return resolveUri(API_CALL);
+        return String.format(resolveUri(API_CALL), serverId);
     }
 
     @Override
@@ -48,11 +47,4 @@ public class ListServers extends AbstractAction implements Action {
         return "servers";
     }
 
-    public static void main(String[] args) throws Exception {
-        String regionId = "20827";
-        List<Server> servers = EnstratusAPI.getInfrastructureApi().listServers(regionId);
-        for (Server server : servers) {
-            System.out.println(server);
-        }
-    }
 }

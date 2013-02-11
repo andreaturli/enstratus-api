@@ -1,7 +1,6 @@
 package com.enstratus.api.client;
 
 import static com.enstratus.api.utils.EnstratusConstants.DEFAULT_BASEURL;
-import static com.enstratus.api.utils.EnstratusConstants.DEFAULT_VERSION;
 
 import java.io.IOException;
 import java.net.URI;
@@ -105,7 +104,8 @@ public class EnstratusHttpClient extends AbstractEnstratusClient implements Enst
     }
 
     private EnstratusResult deserializeResponse(HttpResponse response, String pathToResult) throws IOException {
-        return createNewEnstratusResult(EntityUtils.toString(response.getEntity()), response.getStatusLine(), pathToResult);
+        String jsonString = response.getEntity() == null ? "" : EntityUtils.toString(response.getEntity());
+        return createNewEnstratusResult(jsonString, response.getStatusLine(), pathToResult);
     }
 
     public HttpClient getHttpClient() {

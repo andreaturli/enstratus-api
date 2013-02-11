@@ -1,5 +1,5 @@
 package com.enstratus.api.model;
 
 public enum Platform {
-    UNIX, WINDOWS, UNKNOWN
+    UNIX, WINDOWS, UBUNTU, RHEL, CENT_OS, UNKNOWN
 }

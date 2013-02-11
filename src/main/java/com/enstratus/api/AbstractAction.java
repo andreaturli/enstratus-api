@@ -61,6 +61,12 @@ public abstract class AbstractAction implements Action {
         return null;
     }
     
+
+    @Override
+    public String getPathToResult() {
+        return null;
+    }
+    
     @Override
     public Map<String, String> getHeaders() throws Exception {        
         Map<String, String> headers = Maps.newLinkedHashMap();
