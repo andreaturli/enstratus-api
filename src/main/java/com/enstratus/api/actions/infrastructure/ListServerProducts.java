@@ -12,9 +12,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
-import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.model.ServerProduct;
 
 /**
  * Server products represent the available options and pricing for launching a virtual machine.
@@ -51,13 +49,5 @@ public class ListServerProducts extends AbstractAction implements Action {
     @Override
     public String getPathToResult() {
         return "serverProducts";
-    }
-
-    public static void main(String[] args) throws Exception {
-        String regionId = "20827";
-        List<ServerProduct> serverProducts = EnstratusAPI.getInfrastructureApi().listServerProducts(regionId);
-        for (ServerProduct serverProduct : serverProducts) {
-            System.out.println(serverProduct);
-        }
     }
 }

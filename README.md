@@ -3,6 +3,8 @@ enStratus Java API call example
 
 ## Build
 
+   mvn clean install -Plive
+
 Build the self-contained "fat" jar:
 
     mvn package

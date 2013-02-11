@@ -1,8 +1,8 @@
 package com.enstratus.api;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.io.BaseEncoding.base64;
 import static com.google.common.io.ByteStreams.readBytes;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

@@ -7,9 +7,7 @@ import java.util.Map;
 
 import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
-import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.model.Job;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -81,19 +79,5 @@ public class LaunchServer extends AbstractAction implements Action {
         lauchServerBody.put("launch", launchList);
 
         return lauchServerBody;
-    }
-
-    public static void main(String[] args) throws Exception {
-        String name = "andrea-enstratus-test";
-        String description = "andrea enstratus test";
-        String budgetId = "10725";
-        String machineImageId = "296131";
-        String dataCenterId = "20827";
-        List<Job> jobs = EnstratusAPI.getInfrastructureApi()
-                                     .launchServer(name, description, budgetId, machineImageId, dataCenterId);
-        for (Job job : jobs) {
-            System.out.println(job);
-        }
-
     }
 }

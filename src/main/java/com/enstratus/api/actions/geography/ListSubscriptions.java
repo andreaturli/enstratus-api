@@ -1,12 +1,8 @@
 package com.enstratus.api.actions.geography;
 
-import java.util.List;
-
 import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
-import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.model.Subscription;
 
 /**
  * A subscription describes the capabilities of a specific region as matched by
@@ -34,10 +30,4 @@ public class ListSubscriptions extends AbstractAction implements Action {
         return "subscriptions";
     }
 
-    public static void main(String[] args) throws Exception {
-        List<Subscription> subscriptions = EnstratusAPI.getGeographyApi().listSubscriptions();
-        for (Subscription subscription : subscriptions) {
-            System.out.println(subscription);
-        }
-    }
 }

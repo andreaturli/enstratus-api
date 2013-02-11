@@ -11,9 +11,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
-import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.HttpMethod;
-import com.enstratus.api.model.MachineImage;
 import com.google.common.collect.Lists;
 
 public class ListMachineImages extends AbstractAction implements Action {
@@ -45,13 +43,5 @@ public class ListMachineImages extends AbstractAction implements Action {
     @Override
     public String getPathToResult() {
         return "images";
-    }
-
-    public static void main(String[] args) throws Exception {
-        String regionId = "20827";
-        List<MachineImage> machineImages = EnstratusAPI.getInfrastructureApi().listMachineImages(regionId);
-        for (MachineImage machineImage : machineImages) {
-            System.out.println(machineImage);
-        }
     }
 }

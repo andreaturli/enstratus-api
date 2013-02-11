@@ -1,6 +1,6 @@
 package com.enstratus.api.actions.geography;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.enstratus.api.features;
 
 import java.util.List;
-import java.util.Map;
 
 import com.enstratus.api.actions.geography.GetRegion;
 import com.enstratus.api.actions.geography.ListClouds;
