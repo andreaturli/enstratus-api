@@ -3,9 +3,6 @@ package com.enstratus.api.model;
 import com.google.common.base.Objects;
 
 public class Region {
-    public enum Status {
-        ACTIVE
-    };
 
     private Status status;
     private String regionId;

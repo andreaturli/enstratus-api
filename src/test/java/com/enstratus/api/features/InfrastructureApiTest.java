@@ -20,7 +20,6 @@ import com.enstratus.api.model.Server;
 import com.enstratus.api.model.ServerProduct;
 import com.enstratus.api.model.Status;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.Uninterruptibles;
 
 public class InfrastructureApiTest {
