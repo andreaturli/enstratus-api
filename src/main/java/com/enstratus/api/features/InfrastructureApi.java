@@ -39,8 +39,8 @@ public class InfrastructureApi {
     }
     
     public Job launchServer(String name, String description, String budgetId, String machineImageId,
-            String dataCenterId) throws Exception {
-        return enstratusClient.execute(new LaunchServer(name, description, budgetId, machineImageId, dataCenterId))
+            String dataCenterId, String firewallId) throws Exception {
+        return enstratusClient.execute(new LaunchServer(name, description, budgetId, machineImageId, dataCenterId, firewallId))
                 .getSourceAsObject(Job.class);
     }
 

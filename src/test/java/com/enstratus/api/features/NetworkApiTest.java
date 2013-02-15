@@ -22,6 +22,7 @@ public class NetworkApiTest {
 
     private NetworkApi api;
     private String regionId;
+    private String firewallId;
 
     @BeforeClass
     public void beforeClass() throws Exception {
@@ -35,30 +36,31 @@ public class NetworkApiTest {
 
     @Test
     public void addFirewall() throws Exception {
-        String name = "firewallTest";
+        String name = "firewallIntegrationTest";
         String description = "firewall test";
         Color label = Color.RED;
-        String cidr = "157.166.224.26/32";
-        String startPort = "8080";
-        String endPort = "8081";
         
         BillingCode billingCode = tryFindBillingCode();
         if (billingCode == null)
             Assert.fail();
         String budgetId = billingCode.getBillingCodeId();
-        String firewallId = null;
-        try {
             Job job = api.addFirewall(name, description, budgetId, regionId, label);
             assertNotNull(job.getJobId());
             job = Jobs.waitForJob(job);            
-            if(Jobs.isComplete(job)) {
-                firewallId = job.getMessage();
-                api.addFirewallRule(firewallId, cidr, startPort, endPort, Direction.INGRESS, Protocol.TCP);
-            }
+            Assert.assertTrue((Jobs.isComplete(job)));
+            firewallId = job.getMessage();
+    }
+    
+    @Test(dependsOnMethods="addFirewall")
+    public void addFirewallRule() throws Exception {
+        String cidr = "157.166.224.26/32";
+        String startPort = "8080";
+        String endPort = "8081";
+        Assert.assertNotNull(firewallId);
+        try {
+            api.addFirewallRule(firewallId, cidr, startPort, endPort, Direction.INGRESS, Protocol.TCP);
         } finally {
-            if(firewallId != null) {
-                api.deleteFirewall(firewallId, "just a test");
-            }
+            api.deleteFirewall(firewallId, "just a test");
         }
     }
     
@@ -69,7 +71,6 @@ public class NetworkApiTest {
     @Test
     public void listFirewalls() throws Exception {
         for (Firewall firewall : api.listFirewalls(regionId)) {
-            System.err.println(firewall);
             assertNotNull(firewall);
         }
     }

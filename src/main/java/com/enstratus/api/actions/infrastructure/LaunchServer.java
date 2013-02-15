@@ -20,13 +20,20 @@ public class LaunchServer extends AbstractAction implements Action {
     private final String description;
     private final String machineImageId;
     private final String dataCenterId;
-
+    private final String firewallId;
+    
     public LaunchServer(String name, String description, String budgetId, String machineImageId, String dataCenterId) {
+        this(name, description, budgetId, machineImageId, dataCenterId, null);
+    }
+    
+    public LaunchServer(String name, String description, String budgetId, String machineImageId, String dataCenterId,
+            String firewallId) {
         this.name = checkNotNull(name, "name");
         this.description = checkNotNull(description, "description");
         this.budgetId = checkNotNull(budgetId, "budgetId");
         this.machineImageId = checkNotNull(machineImageId, "machineImageId");
         this.dataCenterId = checkNotNull(dataCenterId, "dataCenterId");
+        this.firewallId = firewallId;
     }
 
     @Override
@@ -53,7 +60,8 @@ public class LaunchServer extends AbstractAction implements Action {
      *   "budget":"xxx",
      *   "description":"andrea enstratus test",
      *   "machineImage":{"machineImageId":296131},
-     *   "dataCenter":{"dataCenterId":xxxxx}
+     *   "dataCenter":{"dataCenterId":xxxxx},
+     *   "firewalls":[{"firewallId":3064},{"firewallId":3263}], // optional
      *   }
      *   ]
      *   }
@@ -74,7 +82,13 @@ public class LaunchServer extends AbstractAction implements Action {
         launchMap.put("description", description);
         launchMap.put("machineImage", machineImageDetails);
         launchMap.put("dataCenter", datacenterDetails);
-        
+        if(firewallId != null) {
+            Map<String, Object> firewallDetails = Maps.newLinkedHashMap();
+            firewallDetails.put("firewallId", firewallId);        
+            List<Map<String, Object>> firewallList = Lists.newArrayList();
+            firewallList.add(firewallDetails);
+            launchMap.put("firewalls", firewallList);
+        }
         List<Object> launchList = Lists.newArrayList();
         launchList.add(launchMap);        
         lauchServerBody.put("launch", launchList);
