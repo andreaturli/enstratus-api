@@ -41,7 +41,7 @@ public class GeographyApiTest {
         Region region = Iterables.tryFind(api.listRegions(), Predicates.notNull()).orNull();
         if(region == null)
             Assert.fail();
-        System.out.println(api.getRegion(region.getRegionId()));
+        assertNotNull(api.getRegion(region.getRegionId()));
     }    
 
     public void testListDatacenters() throws Exception {

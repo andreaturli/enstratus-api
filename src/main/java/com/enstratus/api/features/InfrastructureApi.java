@@ -45,7 +45,6 @@ public class InfrastructureApi {
     }
 
     public void deleteServer(String serverId, String reason) throws Exception {
-            System.out.println("delete server: " + serverId);
             if(reason.length() < 10)
                 throw new RuntimeException();
             enstratusClient.execute(new DeleteServer(serverId, reason));

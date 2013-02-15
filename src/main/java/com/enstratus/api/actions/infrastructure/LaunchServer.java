@@ -14,6 +14,7 @@ import com.google.common.collect.Maps;
 public class LaunchServer extends AbstractAction implements Action {
 
     private final String API_CALL = "infrastructure/Server";
+    
     private final String name;
     private final String budgetId;
     private final String description;

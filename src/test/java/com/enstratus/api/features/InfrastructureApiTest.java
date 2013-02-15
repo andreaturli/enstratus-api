@@ -19,6 +19,7 @@ import com.enstratus.api.model.Region;
 import com.enstratus.api.model.Server;
 import com.enstratus.api.model.ServerProduct;
 import com.enstratus.api.model.Status;
+import com.enstratus.api.utils.Jobs;
 import com.google.common.base.Predicates;
 import com.google.common.util.concurrent.Uninterruptibles;
 
@@ -58,13 +59,12 @@ public class InfrastructureApiTest {
         try {
             job = api.launchServer(name, description, budgetId, machineImageId, dataCenterId);
             assertNotNull(job.getJobId());
-            while(job.getStatus()!=Status.COMPLETE) {
-                Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
-                job = EnstratusAPI.getAdminApi().getJob(job.getJobId());
-            }            
+            job = Jobs.waitForJob(job);            
         } finally {
-            String serverId = job.getMessage();
-            api.deleteServer(serverId, "just a test");
+            if(Jobs.isComplete(job)) {
+                String serverId = job.getMessage();
+                api.deleteServer(serverId, "just a test");
+            }
         }
     }
     
