@@ -2,8 +2,6 @@ package com.enstratus.api.actions.infrastructure;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -19,7 +17,7 @@ public class ListMachineImages extends AbstractAction implements Action {
     private final String API_CALL = "infrastructure/MachineImage";
     private final String regionId;
     
-    public ListMachineImages(String regionId) throws MalformedURLException, URISyntaxException {
+    public ListMachineImages(String regionId) {
         this.regionId = checkNotNull(regionId, "regionId");
     }
     

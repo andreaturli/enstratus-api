@@ -32,6 +32,7 @@ import com.enstratus.api.HttpMethod;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Throwables;
 
 public class EnstratusHttpClient extends AbstractEnstratusClient implements EnstratusClient {
 
@@ -39,60 +40,68 @@ public class EnstratusHttpClient extends AbstractEnstratusClient implements Enst
 
     private HttpClient httpClient = new DefaultHttpClient();
 
-    public EnstratusResult execute(Action action) throws Exception {
+    public EnstratusResult execute(Action action) {
+        try {
+            URL base = new URL(DEFAULT_BASEURL);
+            URI uri = new URI(base.getProtocol(), base.getHost(), action.getURI(), null);
 
-        URL base = new URL(DEFAULT_BASEURL);
-        URI uri = new URI(base.getProtocol(), base.getHost(), action.getURI(), null);
-        
-        HttpUriRequest request = constructHttpMethod(action.getRestMethodName(), uri, action.getQueryParameters(), action.getBody());
-        
-        // add headers added to action
-        if (!action.getHeaders().isEmpty()) {
-            for (Entry<String, String> header: action.getHeaders().entrySet()) {
+            HttpUriRequest request = constructHttpMethod(action.getRestMethodName(), uri, action.getQueryParameters(),
+                    action.getBody());
+
+            // add headers added to action
+            if (!action.getHeaders().isEmpty()) {
+                for (Entry<String, String> header : action.getHeaders().entrySet()) {
                     request.addHeader(header.getKey(), header.getValue());
-            }
-        }
-        
-        HttpResponse response = httpClient.execute(request);
-
-        // If head method returns no content, it is added according to response code thanks to https://github.com/hlassiege
-        if (request.getMethod().equalsIgnoreCase("HEAD")) {
-            if (response.getEntity() == null) {
-                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                    response.setEntity(new StringEntity("{\"ok\" : true, \"found\" : true}"));
-                } else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
-                    response.setEntity(new StringEntity("{\"ok\" : false, \"found\" : false}"));
                 }
             }
+
+            HttpResponse response = httpClient.execute(request);
+
+            // If head method returns no content, it is added according to
+            // response code thanks to https://github.com/hlassiege
+            if (request.getMethod().equalsIgnoreCase("HEAD")) {
+                if (response.getEntity() == null) {
+                    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                        response.setEntity(new StringEntity("{\"ok\" : true, \"found\" : true}"));
+                    } else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                        response.setEntity(new StringEntity("{\"ok\" : false, \"found\" : false}"));
+                    }
+                }
+            }
+            return deserializeResponse(response, action.getPathToResult());
+        } catch (Exception e) {
+            throw Throwables.propagate(e);
         }
-        return deserializeResponse(response, action.getPathToResult());
     }
 
     protected HttpUriRequest constructHttpMethod(HttpMethod httpMethod, URI uri,
             List<NameValuePair> queryParameters, Map<String, Object> body) throws Exception {
         switch (httpMethod) {
             case GET:
-                log.debug("GET method created based on client request");
                 if (queryParameters != null && !queryParameters.isEmpty()) {
                     uri = new URIBuilder(uri).setQuery(URLEncodedUtils.format(queryParameters, "UTF-8")).build();
                 }
-                return new HttpGet(uri);
+                HttpGet httpGet = new HttpGet(uri);
+                log.debug(httpGet.toString());
+                return httpGet;
             case POST:
                 HttpPost httpPost = new HttpPost(uri);
-                log.debug("POST method created based on client request");
                 if (body != null) httpPost.setEntity(new StringEntity(createJsonStringEntity(body), "UTF-8"));
+                log.debug(httpPost.toString());
                 return httpPost;
             case PUT:
                 HttpPut httpPut = new HttpPut(uri);
-                log.debug("PUT method created based on client request");
                 if (body != null) httpPut.setEntity(new StringEntity(createJsonStringEntity(body), "UTF-8"));
+                log.debug(httpPut.toString());                
                 return httpPut;
             case DELETE:
-                log.debug("DELETE method created based on client request");
-                return new HttpDelete(uri);
+                HttpDelete httpDelete = new HttpDelete(uri);
+                log.debug(httpDelete.toString());                
+                return httpDelete;
             case HEAD:
-                log.debug("HEAD method created based on client request");
-                return new HttpHead(uri);
+                HttpHead httpHead = new HttpHead(uri);
+                log.debug(httpHead.toString());                
+                return httpHead;
             default:
                 throw new IllegalStateException("Unknown HTTP method: " + httpMethod);                
         }

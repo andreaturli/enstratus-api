@@ -1,16 +1,16 @@
 package com.enstratus.api.client;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.collections.Lists;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 public class EnstratusResult {
 
@@ -62,12 +62,12 @@ public class EnstratusResult {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getSourceAsObject(Class<?> type) throws IOException {
+    public <T> T getSourceAsObject(Class<?> type) {
         return (T) Iterables.getOnlyElement((List<T>) getSourceAsObjectList(type));
     } 
     
     @SuppressWarnings("unchecked")
-    public <T> T getSourceAsObjectList(Class<?> type) throws IOException {
+    public <T> T getSourceAsObjectList(Class<?> type) {
         List<Object> objectList = Lists.newArrayList();
         if (!isSucceeded) return (T) objectList;
         List<Object> sourceList = extractSource();
@@ -97,9 +97,14 @@ public class EnstratusResult {
     }
 
     @SuppressWarnings("unchecked")
-    protected List<Object> extractSource() throws IOException {
+    protected List<Object> extractSource() {
         ObjectMapper mapper = new ObjectMapper();
-        final Map<String,Object> mapResponse = mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> mapResponse;
+        try {
+            mapResponse = mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
+        } catch (Exception e) {
+            throw Throwables.propagate(e);
+        }
         if (!isSucceeded) {
             throw new RuntimeException();
         } 

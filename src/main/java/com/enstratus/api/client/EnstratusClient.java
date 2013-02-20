@@ -4,6 +4,6 @@ import com.enstratus.api.Action;
 
 public interface EnstratusClient {
 
-    EnstratusResult execute(Action clientRequest) throws Exception;
+    EnstratusResult execute(Action clientRequest);
 
 }

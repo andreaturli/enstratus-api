@@ -9,15 +9,16 @@ import org.apache.http.message.BasicNameValuePair;
 import com.enstratus.api.AbstractAction;
 import com.enstratus.api.Action;
 import com.enstratus.api.HttpMethod;
+import com.enstratus.api.model.Jurisdiction;
 
 public class ListRegions extends AbstractAction implements Action {
 
     String API_CALL = "geography/Region";
     private final String accountId;
-    private final String jurisdiction; 
+    private final Jurisdiction jurisdiction; 
     private final String scope;
     
-    public ListRegions(String accountId, String jurisdiction, String scope) {
+    public ListRegions(String accountId, Jurisdiction jurisdiction, String scope) {
         this.accountId = accountId;
         this.jurisdiction = jurisdiction;
         this.scope = scope;
@@ -37,7 +38,7 @@ public class ListRegions extends AbstractAction implements Action {
     public List<NameValuePair> getQueryParameters() {
         List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
         if(accountId != null) queryParams.add(new BasicNameValuePair("accountId", accountId));
-        if(jurisdiction != null) queryParams.add(new BasicNameValuePair("jurisdiction", jurisdiction));
+        if(jurisdiction != null) queryParams.add(new BasicNameValuePair("jurisdiction", jurisdiction.toString()));
         if(scope != null) queryParams.add(new BasicNameValuePair("scope", scope));
         return queryParams;
     }

@@ -13,7 +13,7 @@ public interface Action {
     
     String getPathToResult();
     
-    Map<String, String> getHeaders() throws Exception;
+    Map<String, String> getHeaders();
 
     List<NameValuePair> getQueryParameters();
     

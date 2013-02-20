@@ -21,7 +21,7 @@ public class NetworkApi {
         this.enstratusClient = enstratusClient;
     }
 
-    public List<Firewall> listFirewalls(String regionId) throws Exception {
+    public List<Firewall> listFirewalls(String regionId) {
         return enstratusClient.execute(new ListFirewalls(regionId)).getSourceAsObjectList(Firewall.class);
     }
     

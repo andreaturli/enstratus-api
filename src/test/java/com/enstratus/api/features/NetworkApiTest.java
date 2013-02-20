@@ -1,6 +1,7 @@
 package com.enstratus.api.features;
 
-import static com.google.common.collect.Iterables.tryFind;
+import static com.enstratus.api.utils.Helpers.tryFindBillingCodeOrNull;
+import static com.enstratus.api.utils.Helpers.tryFindRegionOrNull;
 import static org.testng.Assert.assertNotNull;
 
 import org.junit.Assert;
@@ -13,10 +14,10 @@ import com.enstratus.api.model.Color;
 import com.enstratus.api.model.Direction;
 import com.enstratus.api.model.Firewall;
 import com.enstratus.api.model.Job;
+import com.enstratus.api.model.Jurisdiction;
 import com.enstratus.api.model.Protocol;
 import com.enstratus.api.model.Region;
 import com.enstratus.api.utils.Jobs;
-import com.google.common.base.Predicates;
 
 public class NetworkApiTest {
 
@@ -28,7 +29,7 @@ public class NetworkApiTest {
     public void beforeClass() throws Exception {
         api = EnstratusAPI.getNetworkApi();
         assertNotNull(api);
-        Region region = tryFind(EnstratusAPI.getGeographyApi().listRegions(null, "EU", null), Predicates.notNull()).orNull();
+        Region region = tryFindRegionOrNull(Jurisdiction.EU);
         if (region == null)
             Assert.fail();
         regionId = region.getRegionId();
@@ -40,7 +41,7 @@ public class NetworkApiTest {
         String description = "firewall test";
         Color label = Color.RED;
         
-        BillingCode billingCode = tryFindBillingCode();
+        BillingCode billingCode = tryFindBillingCodeOrNull(regionId);
         if (billingCode == null)
             Assert.fail();
         String budgetId = billingCode.getBillingCodeId();
@@ -62,10 +63,6 @@ public class NetworkApiTest {
         } finally {
             api.deleteFirewall(firewallId, "just a test");
         }
-    }
-    
-    private BillingCode tryFindBillingCode() throws Exception {
-        return tryFind(EnstratusAPI.getAdminApi().listBillingCodes(regionId), Predicates.notNull()).orNull();
     }
     
     @Test

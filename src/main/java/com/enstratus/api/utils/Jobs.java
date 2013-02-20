@@ -10,11 +10,11 @@ import com.google.common.util.concurrent.Uninterruptibles;
 
 public class Jobs {
     
-    public static Job waitForJob(Job job) throws Exception {
+    public static Job waitForJob(Job job) {
         return waitForJob(job, 60);
     }
     
-    public static Job waitForJob(Job job, int maxWaitInSec) throws Exception {
+    public static Job waitForJob(Job job, int maxWaitInSec) {
         Stopwatch stopWatch = new Stopwatch();
         while(job.getStatus()!=Status.COMPLETE && stopWatch.elapsed(TimeUnit.SECONDS) < maxWaitInSec) {
             Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
@@ -25,7 +25,7 @@ public class Jobs {
         return job;
     }
 
-    public static boolean isComplete(Job job) throws Exception {
+    public static boolean isComplete(Job job) {
         return job.getStatus() == Status.COMPLETE;
     }
 }

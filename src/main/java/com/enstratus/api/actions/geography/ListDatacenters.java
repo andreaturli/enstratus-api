@@ -2,8 +2,6 @@ package com.enstratus.api.actions.geography;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +23,7 @@ public class ListDatacenters extends AbstractAction implements Action {
     private final static String API_CALL = "geography/DataCenter";
     private final String regionId;
     
-    public ListDatacenters(String regionId) throws MalformedURLException, URISyntaxException {
+    public ListDatacenters(String regionId) {
         this.regionId = checkNotNull(regionId, "regionId");
     }
     

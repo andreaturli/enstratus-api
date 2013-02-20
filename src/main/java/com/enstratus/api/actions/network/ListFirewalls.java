@@ -2,8 +2,6 @@ package com.enstratus.api.actions.network;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class ListFirewalls extends AbstractAction implements Action {
     protected final static String API_CALL = "network/Firewall";
     private final String regionId;
 
-    public ListFirewalls(String regionId) throws MalformedURLException, URISyntaxException {
+    public ListFirewalls(String regionId) {
         this.regionId = checkNotNull(regionId, "regionId");
     }
     

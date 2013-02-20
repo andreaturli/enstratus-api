@@ -1,5 +1,6 @@
 package com.enstratus.api.features;
 
+import static com.enstratus.api.utils.Helpers.tryFindRegionOrNull;
 import static org.testng.Assert.assertNotNull;
 
 import org.junit.Assert;
@@ -9,9 +10,8 @@ import org.testng.annotations.Test;
 import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.model.BillingCode;
 import com.enstratus.api.model.Job;
+import com.enstratus.api.model.Jurisdiction;
 import com.enstratus.api.model.Region;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 
 public class AdminApiTest {
 
@@ -22,7 +22,7 @@ public class AdminApiTest {
     public void beforeClass() throws Exception {
         api = EnstratusAPI.getAdminApi();
         assertNotNull(api);
-        region = Iterables.tryFind(EnstratusAPI.getGeographyApi().listRegions(), Predicates.notNull()).orNull();
+        region = tryFindRegionOrNull(Jurisdiction.EU);
         if (region == null)
             Assert.fail();
     }

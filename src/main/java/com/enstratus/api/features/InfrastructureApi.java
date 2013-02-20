@@ -22,29 +22,29 @@ public class InfrastructureApi {
         this.enstratusClient = enstratusClient;
     }
 
-    public List<MachineImage> listMachineImages(String regionId) throws Exception {
+    public List<MachineImage> listMachineImages(String regionId) {
         return enstratusClient.execute(new ListMachineImages(regionId)).getSourceAsObjectList(MachineImage.class);
     }
 
-    public List<ServerProduct> listServerProducts(String regionId) throws Exception {
+    public List<ServerProduct> listServerProducts(String regionId) {
         return enstratusClient.execute(new ListServerProducts(regionId)).getSourceAsObjectList(ServerProduct.class);
     }
 
-    public List<Server> listServers(String regionId) throws Exception {
+    public List<Server> listServers(String regionId) {
         return enstratusClient.execute(new ListServers(regionId)).getSourceAsObjectList(Server.class);
     }
 
-    public Server getServer(String serverId, String regionId) throws Exception {
+    public Server getServer(String serverId, String regionId) {
         return enstratusClient.execute(new GetServer(serverId, regionId)).getSourceAsObject(Server.class);
     }
     
     public Job launchServer(String name, String description, String budgetId, String machineImageId,
-            String dataCenterId, String firewallId) throws Exception {
+            String dataCenterId, String firewallId) {
         return enstratusClient.execute(new LaunchServer(name, description, budgetId, machineImageId, dataCenterId, firewallId))
                 .getSourceAsObject(Job.class);
     }
 
-    public void deleteServer(String serverId, String reason) throws Exception {
+    public void deleteServer(String serverId, String reason) {
             if(reason.length() < 10)
                 throw new RuntimeException();
             enstratusClient.execute(new DeleteServer(serverId, reason));

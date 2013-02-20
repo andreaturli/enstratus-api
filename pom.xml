@@ -5,7 +5,7 @@
 
 	<groupId>com.cloudsoftcorp</groupId>
 	<artifactId>enstratus-api</artifactId>
-	<version>0.1.1</version>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>enStratus Java API</name>
@@ -34,7 +34,6 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.2.1</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -113,8 +112,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
 		</plugins>

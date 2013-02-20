@@ -2,8 +2,6 @@ package com.enstratus.api.actions.infrastructure;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +23,7 @@ public class ListServerProducts extends AbstractAction implements Action {
     private final String API_CALL = "infrastructure/ServerProduct";
     private final String regionId;
     
-    public ListServerProducts(String regionId) throws MalformedURLException, URISyntaxException {
+    public ListServerProducts(String regionId) {
         this.regionId = checkNotNull(regionId, "regionId");
     }
     

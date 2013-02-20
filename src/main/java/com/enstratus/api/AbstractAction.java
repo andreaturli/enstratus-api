@@ -15,6 +15,7 @@ import java.util.Map;
 import org.apache.http.NameValuePair;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
@@ -68,13 +69,18 @@ public abstract class AbstractAction implements Action {
     }
     
     @Override
-    public Map<String, String> getHeaders() throws Exception {        
+    public Map<String, String> getHeaders() {        
         Map<String, String> headers = Maps.newLinkedHashMap();
         headers.put("User-Agent", USER_AGENT);
         headers.put("Accept", "application/json");
         String timestamp = Long.toString(System.currentTimeMillis());
         String toSign = Joiner.on(":").join(ImmutableList.of(accessKey, getRestMethodName().toString(), getURI(), timestamp, USER_AGENT));
-        String signature = RequestSignature.sign(secretKey, toSign);
+        String signature;
+        try {
+            signature = RequestSignature.sign(secretKey, toSign);
+        } catch (Exception e) {
+            throw Throwables.propagate(e);
+        }
         headers.put("x-es-details", Details.BASIC.toString());
         headers.put("x-es-with-perms", "false");
         headers.put("x-esauth-access", accessKey);
