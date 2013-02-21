@@ -1,5 +1,6 @@
 package com.enstratus.api.client;
 
+import static com.google.common.base.Preconditions.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,14 @@ public abstract class AbstractEnstratusClient implements EnstratusClient {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractEnstratusClient.class);
     
+    private final String accessKey;
+    private final String secretKey;
+       
+    public AbstractEnstratusClient(String accessKey, String secretKey) {
+        this.accessKey = checkNotNull(accessKey, "accessKey");
+        this.secretKey = checkNotNull(secretKey, "secretKey");
+    }
+
     protected EnstratusResult createNewEnstratusResult(String json, StatusLine statusLine, String pathToResult) {
         EnstratusResult result = new EnstratusResult();
         if (!json.isEmpty()) {
@@ -45,5 +54,13 @@ public abstract class AbstractEnstratusClient implements EnstratusClient {
                 enstratusEndpoint.length() - 1) : enstratusEndpoint;
         return String.format("%s/api/enstratus/%s/%s", serverUrl, version, uri);
 
+    }
+
+    protected String getAccessKey() {
+        return accessKey;
+    }
+
+    protected String getSecretKey() {
+        return secretKey;
     }
 }

@@ -5,9 +5,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 import java.util.Map;
 
-import com.enstratus.api.AbstractAction;
-import com.enstratus.api.Action;
 import com.enstratus.api.HttpMethod;
+import com.enstratus.api.actions.AbstractAction;
+import com.enstratus.api.actions.Action;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 

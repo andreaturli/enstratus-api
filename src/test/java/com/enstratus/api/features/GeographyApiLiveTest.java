@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.model.Cloud;
 import com.enstratus.api.model.Datacenter;
 import com.enstratus.api.model.Region;
@@ -15,13 +14,13 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 
 @Test(groups = "live", testName = "GeographyApiTest")
-public class GeographyApiTest {
+public class GeographyApiLiveTest extends BasicEnstratusLiveTest {
 
     private GeographyApi api;
 
     @BeforeClass
     public void beforeClass() {
-        api = EnstratusAPI.getGeographyApi();
+        api = enstratusAPI.getGeographyApi();
         assertNotNull(api);
     }
 
@@ -39,15 +38,13 @@ public class GeographyApiTest {
     
     public void testGetRegion() throws Exception {
         Region region = Iterables.tryFind(api.listRegions(), Predicates.notNull()).orNull();
-        if(region == null)
-            Assert.fail();
+        Assert.assertNotNull(region);
         assertNotNull(api.getRegion(region.getRegionId()));
     }    
 
     public void testListDatacenters() throws Exception {
         Region region = Iterables.tryFind(api.listRegions(), Predicates.notNull()).orNull();
-        if(region == null)
-            Assert.fail();
+        Assert.assertNotNull(region);
         for (Datacenter datacenter : api.listDatacenters(region.getRegionId())) {
             assertNotNull(datacenter.getDataCenterId());
         }

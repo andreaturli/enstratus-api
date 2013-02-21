@@ -1,8 +1,8 @@
 package com.enstratus.api.actions.geography;
 
-import com.enstratus.api.AbstractAction;
-import com.enstratus.api.Action;
 import com.enstratus.api.HttpMethod;
+import com.enstratus.api.actions.AbstractAction;
+import com.enstratus.api.actions.Action;
 
 /**
  * A subscription describes the capabilities of a specific region as matched by
@@ -25,6 +25,7 @@ public class ListSubscriptions extends AbstractAction implements Action {
         return HttpMethod.GET;
     }
 
+    
     @Override
     public String getPathToResult() {
         return "subscriptions";

@@ -7,22 +7,21 @@ import org.junit.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.model.BillingCode;
 import com.enstratus.api.model.Job;
 import com.enstratus.api.model.Jurisdiction;
 import com.enstratus.api.model.Region;
 
-public class AdminApiTest {
+public class AdminApiLiveTest extends BasicEnstratusLiveTest {
 
     private AdminApi api;
     private Region region;
 
     @BeforeClass
     public void beforeClass() throws Exception {
-        api = EnstratusAPI.getAdminApi();
+        api = enstratusAPI.getAdminApi();
         assertNotNull(api);
-        region = tryFindRegionOrNull(Jurisdiction.EU);
+        region = tryFindRegionOrNull(Jurisdiction.EU, enstratusAPI.getGeographyApi());
         if (region == null)
             Assert.fail();
     }

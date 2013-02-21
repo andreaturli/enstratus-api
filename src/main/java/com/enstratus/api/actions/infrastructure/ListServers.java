@@ -8,9 +8,9 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.enstratus.api.AbstractAction;
-import com.enstratus.api.Action;
 import com.enstratus.api.HttpMethod;
+import com.enstratus.api.actions.AbstractAction;
+import com.enstratus.api.actions.Action;
 
 public class ListServers extends AbstractAction implements Action {
 

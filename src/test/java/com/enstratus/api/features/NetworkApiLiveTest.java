@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.enstratus.api.EnstratusAPI;
 import com.enstratus.api.model.BillingCode;
 import com.enstratus.api.model.Color;
 import com.enstratus.api.model.Direction;
@@ -19,7 +18,7 @@ import com.enstratus.api.model.Protocol;
 import com.enstratus.api.model.Region;
 import com.enstratus.api.utils.Jobs;
 
-public class NetworkApiTest {
+public class NetworkApiLiveTest extends BasicEnstratusLiveTest {
 
     private NetworkApi api;
     private String regionId;
@@ -27,9 +26,9 @@ public class NetworkApiTest {
 
     @BeforeClass
     public void beforeClass() throws Exception {
-        api = EnstratusAPI.getNetworkApi();
+        api = enstratusAPI.getNetworkApi();
         assertNotNull(api);
-        Region region = tryFindRegionOrNull(Jurisdiction.EU);
+        Region region = tryFindRegionOrNull(Jurisdiction.EU, enstratusAPI.getGeographyApi());
         if (region == null)
             Assert.fail();
         regionId = region.getRegionId();
@@ -41,13 +40,13 @@ public class NetworkApiTest {
         String description = "firewall test";
         Color label = Color.RED;
         
-        BillingCode billingCode = tryFindBillingCodeOrNull(regionId);
+        BillingCode billingCode = tryFindBillingCodeOrNull(regionId, enstratusAPI.getAdminApi());
         if (billingCode == null)
             Assert.fail();
         String budgetId = billingCode.getBillingCodeId();
             Job job = api.addFirewall(name, description, budgetId, regionId, label);
             assertNotNull(job.getJobId());
-            job = Jobs.waitForJob(job);            
+            job = Jobs.waitForJob(job, enstratusAPI.getAdminApi());            
             Assert.assertTrue((Jobs.isComplete(job)));
             firewallId = job.getMessage();
     }

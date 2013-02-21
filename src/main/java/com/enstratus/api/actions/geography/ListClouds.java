@@ -1,8 +1,8 @@
 package com.enstratus.api.actions.geography;
 
-import com.enstratus.api.AbstractAction;
-import com.enstratus.api.Action;
 import com.enstratus.api.HttpMethod;
+import com.enstratus.api.actions.AbstractAction;
+import com.enstratus.api.actions.Action;
 
 public class ListClouds extends AbstractAction implements Action {
 
