@@ -10,5 +10,6 @@ public class EnstratusConstants {
     public static final String ENSTRATUS_API_VERSION = "ENSTRATUS_API_VERSION";
     public static final String ENSTRATUS_API_ACCESS_KEY = "ENSTRATUS_API_ACCESS_KEY";
     public static final String ENSTRATUS_API_SECRET_KEY = "ENSTRATUS_API_SECRET_KEY";
+    public static final String ENSTRATUS_API_JURISDICTION = "ENSTRATUS_API_JURISDICTION";
 
 }

@@ -11,11 +11,12 @@ import com.google.common.util.concurrent.Uninterruptibles;
 public class Jobs {
     
     public static Job waitForJob(Job job, AdminApi adminApi) {
-        return waitForJob(job, 60, adminApi);
+        return waitForJob(job, 5 * 60, adminApi);
     }
     
     public static Job waitForJob(Job job, int maxWaitInSec, AdminApi adminApi) {
         Stopwatch stopWatch = new Stopwatch();
+        stopWatch.start();
         while(job.getStatus()!=Status.COMPLETE && stopWatch.elapsed(TimeUnit.SECONDS) < maxWaitInSec) {
             Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
             job = adminApi.getJob(job.getJobId());
